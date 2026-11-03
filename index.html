@@ -277,9 +277,11 @@ const night=W&&W.current.is_day===0;
 const scene=$('#scene');
 if(visual==='photo'){
 scene.className='scene photo '+(night?'night':kind);
-$('#petEl').innerHTML=`<img class="pet-photo" src="${PET_PHOTO_DATA[petPhotoFor()]}" alt="${esc(S.pet.name)} the fluffy weather pet" onerror="this.outerHTML=petSVG()">`;
+$('#petEl').innerHTML=`<img class="pet-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="${PET_PHOTO_DATA[petPhotoFor()]}" alt="${esc(S.pet.name)} the fluffy weather pet" onerror="this.outerHTML=petSVG()">`;
+$('#petEl').style.cssText='position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;';
 $('#sunEl').style.display='none';$('#rainEl').innerHTML='';$('#starsEl').innerHTML='';
 } else {
+$('#petEl').style.cssText='';
 $('#petEl').innerHTML=petSVG();
 scene.className='scene '+(night?'night':kind);
 $('#sunEl').style.display=(kind==='sunny'&&!night)?'block':'none';
