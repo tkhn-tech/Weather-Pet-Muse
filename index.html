@@ -56,9 +56,31 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 .pet-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .scene.photo .sun,.scene.photo .cloud,.scene.photo .ground,.scene.photo .rain{display:none}
 .scene.photo .pet{left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;animation:none}
-.bubble{position:absolute;left:12px;right:12px;top:12px;background:rgba(255,255,255,.96);border-radius:16px;padding:11px 13px;font-weight:600;font-size:14.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:3}
-.scene.night .bubble{background:rgba(255,255,255,.95)}
-.bubble:after{content:"";position:absolute;left:50%;bottom:-8px;border:8px solid transparent;border-top-color:#fff;border-bottom:0;margin-left:-8px}
+.bubble{position:absolute;left:14px;right:14px;top:14px;background:linear-gradient(180deg,#fffdf6,#fff2d8);border:1.5px solid #e8d3ac;border-radius:26px 26px 26px 10px;padding:12px 15px;font-weight:650;font-size:14.5px;line-height:1.45;color:#3a2e1e;box-shadow:0 8px 20px rgba(60,40,10,.18),inset 0 0 0 1px rgba(255,255,255,.75);z-index:4}
+.scene.night .bubble{background:linear-gradient(180deg,#fffdf6,#fff2d8)}
+.bubble:after{content:"";position:absolute;left:44px;bottom:-9px;width:16px;height:16px;background:#fff2d8;border-right:1.5px solid #e8d3ac;border-bottom:1.5px solid #e8d3ac;transform:rotate(45deg)}
+.bubble:before{content:"";position:absolute;left:62px;bottom:-20px;width:10px;height:10px;background:#fff2d8;border:1.5px solid #e8d3ac;border-radius:50%}
+.bubble.pop{animation:bubblePop .35s ease}
+@keyframes bubblePop{0%{transform:scale(.96)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
+/* Living photo pet: gentle breathing + sway, so the photo feels alive, not frozen */
+.scene.photo .pet{animation:petBreathe 4.5s ease-in-out infinite,petSway 9s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes petBreathe{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.025) translateY(-4px)}}
+@keyframes petSway{0%,100%{rotate:-1deg}50%{rotate:1deg}}
+.scene.photo .pet.excited{animation:petExcited .9s ease}
+@keyframes petExcited{0%{transform:scale(1) translateY(0) rotate(0deg)}25%{transform:scale(1.06) translateY(-14px) rotate(-2deg)}50%{transform:scale(.96) translateY(2px) rotate(2deg)}75%{transform:scale(1.04) translateY(-8px) rotate(-1deg)}100%{transform:scale(1) translateY(0) rotate(0deg)}}
+.pet.excited{animation:petExcitedFlat .9s ease}
+@keyframes petExcitedFlat{0%{transform:translateX(-50%) scale(1) translateY(0)}25%{transform:translateX(-50%) scale(1.06) translateY(-14px)}50%{transform:translateX(-50%) scale(.96) translateY(2px)}75%{transform:translateX(-50%) scale(1.04) translateY(-8px)}100%{transform:translateX(-50%) scale(1) translateY(0)}}
+/* Living environment overlay, shown over the photo in photo mode only */
+.env{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.envdrop{position:absolute;top:-20px;width:2px;height:16px;background:rgba(255,255,255,.85);animation:envFall 1s linear infinite}
+@keyframes envFall{to{transform:translateY(340px)}}
+.envspark{position:absolute;color:#fff;font-size:16px;animation:envTwinkle 2.8s ease-in-out infinite}
+.envstar{position:absolute;color:#fff;font-size:13px;animation:envTwinkle 2.5s ease-in-out infinite}
+@keyframes envTwinkle{0%,100%{opacity:.25}50%{opacity:1}}
+.envmist{position:absolute;height:44px;background:rgba(255,255,255,.35);border-radius:99px;animation:envDrift 22s linear infinite}
+@keyframes envDrift{from{transform:translateX(-30%)}to{transform:translateX(130%)}}
+.heartbit{position:absolute;font-size:20px;pointer-events:none;z-index:5;animation:heartFloat 1.25s ease-out forwards}
+@keyframes heartFloat{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-90px) scale(1.15);opacity:0}}
 .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
 .kpi div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center}
 .kpi b{font-size:17px;display:block}.kpi span{font-size:11px;color:var(--muted);font-weight:700}
@@ -92,6 +114,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <div class="cloud c1"></div><div class="cloud c2"></div>
 <div class="rain" id="rainEl"></div>
 <div id="starsEl"></div>
+<div class="env" id="envEl"></div>
 <div class="bubble" id="petSpeech">Loading the sky for your pet…</div>
 <div class="pet" id="petEl"></div>
 <div class="ground"></div>
@@ -140,7 +163,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <label>Pet colour</label><div class="row" style="flex-wrap:wrap" id="colourRow"></div>
 <p class="mini" style="margin-top:12px"><b>Add to your home screen:</b> on Android, open this page in Chrome → menu → Add to Home screen. On iPhone, open in Safari → Share → Add to Home Screen. It will then open like an app, with your pet front and centre.</p>
 <div class="row" style="flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="resetPet()">Reset pet & data</button><a class="btn ghost small" href="https://www.nea.gov.sg/weather" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">NEA weather ↗</a></div>
-<p class="mini" style="margin-top:10px">Weather Pet v1.2 Fluffy photo pet · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
+<p class="mini" style="margin-top:10px">Weather Pet v1.3 Living pet update · Fluffy photo pet · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
 </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -280,9 +303,15 @@ scene.className='scene photo '+(night?'night':kind);
 $('#petEl').innerHTML=`<img class="pet-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="${PET_PHOTO_DATA[petPhotoFor()]}" alt="${esc(S.pet.name)} the fluffy weather pet" onerror="this.outerHTML=petSVG()">`;
 $('#petEl').style.cssText='position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;';
 $('#sunEl').style.display='none';$('#rainEl').innerHTML='';$('#starsEl').innerHTML='';
+const env=$('#envEl');
+if(kind==='rainy'||kind==='storm'){env.innerHTML=Array.from({length:22},(_,i)=>`<span class="envdrop" style="left:${(i*43)%100}%;animation-delay:${(i%7)*0.14}s;animation-duration:${0.7+(i%5)*0.13}s"></span>`).join('');}
+else if(night){env.innerHTML=Array.from({length:12},(_,i)=>`<span class="envstar" style="left:${(i*83)%92+4}%;top:${(i*37)%48+6}%;animation-delay:${(i%5)*0.5}s">\u2726</span>`).join('');}
+else if(kind==='sunny'){env.innerHTML=Array.from({length:9},(_,i)=>`<span class="envspark" style="left:${(i*97)%90+5}%;top:${(i*53)%55+8}%;animation-delay:${(i%4)*0.7}s">\u2726</span>`).join('');}
+else{env.innerHTML=`<span class="envmist" style="width:180px;top:32%;animation-duration:26s"></span><span class="envmist" style="width:140px;top:58%;animation-duration:34s;animation-delay:8s"></span>`;}
 } else {
 $('#petEl').style.cssText='';
 $('#petEl').innerHTML=petSVG();
+$('#envEl').innerHTML='';
 scene.className='scene '+(night?'night':kind);
 $('#sunEl').style.display=(kind==='sunny'&&!night)?'block':'none';
 const rain=$('#rainEl');
@@ -356,9 +385,25 @@ if(action==='water'){p.full=clamp(p.full+6);p.energy=clamp(p.energy+6);toast('�
 if(action==='play'){if(W&&codeInfo(W.current.weather_code).kind==='rainy'){p.energy=clamp(p.energy-4);p.happy=clamp(p.happy+(S.pet.personality==='moody'?18:10));toast('🎾 Indoor play — rainy days are for hallway games')}else{p.energy=clamp(p.energy-12);p.happy=clamp(p.happy+16);toast('🎾 Play time! '+p.name+' is delighted')}}
 if(action==='rest'){p.energy=clamp(p.energy+28);p.happy=clamp(p.happy+4);toast('😴 '+p.name+' had a cosy rest')}
 save();renderPet();updateCareNote()}
+function tapLine(){
+const per=S.pet.personality||'moody';
+const lines={moody:["Okay, okay. That was… acceptable.","Heh. Don't make a habit of it."],cheerful:["Hehe! Again, again!","Best tap ever!"],cosy:["Mmm, that was nice. Warm paws.","A gentle tap. Perfect."],adventurous:["Yes! Let's go, let's go!","Wheee! That woke me right up!"]};
+const arr=lines[per]||lines.moody;
+return S.pet.name+" says: \u201c"+arr[Math.floor(Math.random()*arr.length)]+"\u201d";}
+function spawnHearts(){
+const scene=$('#scene');
+['\u2764','\u2726','\u2764'].forEach((ch,i)=>{
+const s=document.createElement('span');s.className='heartbit';s.textContent=ch;
+s.style.left=(38+i*16)+'%';s.style.bottom='38%';s.style.animationDelay=(i*0.12)+'s';
+scene.appendChild(s);setTimeout(()=>s.remove(),1500);});}
 function petTap(){
-const el=$('#petEl');el.classList.remove('jumping');void el.offsetWidth;el.classList.add('jumping');
-S.pet.happy=clamp(S.pet.happy+5);save();renderPet();toast('🤍 '+S.pet.name+' purrs / wags happily')}
+const el=$('#petEl');el.classList.remove('excited');void el.offsetWidth;el.classList.add('excited');
+setTimeout(()=>el.classList.remove('excited'),950);
+spawnHearts();
+S.pet.happy=clamp(S.pet.happy+5);save();renderPet();
+const b=$('#petSpeech');b.textContent=tapLine();b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+updateCareNote();
+clearTimeout(window._speechT);window._speechT=setTimeout(()=>{b.textContent=petSpeech();},2600);}
 function updateCareNote(){
 const p=S.pet;let note='';
 if(W&&W.current.temperature_2m>=33)note='Hot day tip: water matters more than play right now. ';
