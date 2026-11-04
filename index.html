@@ -56,6 +56,59 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 .pet-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .scene.photo .sun,.scene.photo .cloud,.scene.photo .ground,.scene.photo .rain{display:none}
 .scene.photo .pet{left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;animation:none}
+
+/* Talking-Tom-style living pet: each part moves on its own, not the whole picture */
+.pet.living{animation:none;bottom:12px}
+.scene.living-scene{height:400px}
+.tom{position:relative;width:200px;height:220px;--fur:#FFA94D;--fur-dark:#E88F2E}
+.tom-tail{position:absolute;left:2px;bottom:34px;width:72px;height:20px;background:var(--fur);border-radius:99px;transform-origin:100% 50%;transform:rotate(-18deg);animation:tailWag 2.4s ease-in-out infinite;cursor:pointer;z-index:1}
+.tom-tail:after{content:"";position:absolute;right:-4px;top:2px;width:16px;height:16px;background:#FFF3E0;border-radius:50%}
+@keyframes tailWag{0%,100%{transform:rotate(-18deg)}50%{transform:rotate(6deg)}}
+.tom-tail.fast{animation:tailFast .3s ease-in-out infinite}
+@keyframes tailFast{0%,100%{transform:rotate(-28deg)}50%{transform:rotate(22deg)}}
+.tom-body{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:132px;height:112px;background:var(--fur);border-radius:66px 66px 52px 52px;animation:bodyBreathe 3s ease-in-out infinite;transform-origin:50% 100%;cursor:pointer;z-index:2}
+@keyframes bodyBreathe{0%,100%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-50%) scaleY(1.045)}}
+.tom-body.bounce{animation:bodyBounce .8s ease}
+@keyframes bodyBounce{0%{transform:translateX(-50%) scaleY(1)}30%{transform:translateX(-50%) scaleY(.88) scaleX(1.08)}60%{transform:translateX(-50%) scaleY(1.08)}100%{transform:translateX(-50%) scaleY(1)}}
+.tom-belly{position:absolute;left:50%;top:34px;transform:translateX(-50%);width:72px;height:58px;background:#FFF3E0;border-radius:50%}
+.tom-paw{position:absolute;bottom:-4px;width:36px;height:24px;background:var(--fur-dark);border-radius:99px;cursor:pointer;z-index:3}
+.tom-paw.left{left:14px}.tom-paw.right{right:14px}
+.tom-paw.wave{animation:pawWave .7s ease}
+@keyframes pawWave{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-32deg) translateY(-10px)}}
+.tom-head{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:172px;height:142px;background:var(--fur);border-radius:50%;animation:headBob 5s ease-in-out infinite;transform-origin:50% 100%;cursor:pointer;z-index:4;box-shadow:inset 0 -8px 0 rgba(0,0,0,.06)}
+@keyframes headBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1.5deg)}50%{transform:translateX(-50%) translateY(-4px) rotate(1.5deg)}}
+.tom-head.tilt{animation:headTilt .8s ease}
+@keyframes headTilt{0%{transform:translateX(-50%) rotate(0deg)}30%{transform:translateX(-50%) rotate(-10deg) translateY(-6px)}100%{transform:translateX(-50%) rotate(0deg)}}
+.tom-ear{position:absolute;top:-16px;width:46px;height:48px;background:var(--fur);z-index:-1}
+.tom-ear.left{left:20px}.tom-ear.right{right:20px}
+.tom-ear.cat{clip-path:polygon(0 100%,50% 0,100% 100%);border-radius:12px}
+.tom-ear.dog{border-radius:50%;height:62px;width:38px}
+.tom-ear.dog.left{transform:rotate(16deg)}.tom-ear.dog.right{transform:rotate(-16deg)}
+.tom-ear.bunny{border-radius:50%;height:72px;width:30px;top:-38px}
+.tom-ear.twitch{animation:earTwitch .4s ease}
+@keyframes earTwitch{0%,100%{transform:rotate(0deg)}50%{transform:rotate(14deg)}}
+.tom-ear-inner{position:absolute;left:50%;top:14px;transform:translateX(-50%);width:18px;height:22px;background:#FFB3C7;border-radius:50%}
+.tom-eye{position:absolute;top:52px;width:32px;height:36px;background:#20303A;border-radius:50%;transition:height .12s ease,transform .4s ease;overflow:hidden}
+.tom-eye.left{left:38px}.tom-eye.right{right:38px}
+.tom-eye i{position:absolute;left:6px;top:6px;width:10px;height:10px;background:#fff;border-radius:50%}
+.tom.blinking .tom-eye{height:4px}
+.tom.happy .tom-eye{transform:scale(1.12)}
+.tom.sleepy .tom-eye{height:18px}
+.tom-blush{position:absolute;top:92px;width:22px;height:13px;background:#FFB3C7;opacity:.75;border-radius:50%}
+.tom-blush.left{left:26px}.tom-blush.right{right:26px}
+.tom.happy .tom-blush{opacity:1;transform:scale(1.2)}
+.tom-nose{position:absolute;left:50%;top:88px;transform:translateX(-50%);width:16px;height:11px;background:#E94F64;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%}
+.tom-mouth{position:absolute;left:50%;top:102px;transform:translateX(-50%);width:40px;height:22px}
+.mouth-smile{position:absolute;left:50%;top:0;transform:translateX(-50%);width:30px;height:14px;border-bottom:3px solid #20303A;border-radius:50%}
+.mouth-open{display:none;position:absolute;left:50%;top:0;transform:translateX(-50%);width:30px;height:22px;background:#7A2E3A;border-radius:50%;overflow:hidden}
+.mouth-open:after{content:"";position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);width:18px;height:10px;background:#FF8FA3;border-radius:50%}
+.tom.mouth-open .mouth-smile{display:none}.tom.mouth-open .mouth-open{display:block}
+.tom-glasses{position:absolute;top:46px;left:50%;transform:translateX(-50%);width:118px;height:30px;z-index:5}
+.tom-glasses i{position:absolute;top:0;width:44px;height:28px;background:#20303A;opacity:.88;border-radius:12px}
+.tom-glasses i:first-child{left:0}.tom-glasses i:last-child{right:0}
+.tom-nightcap{position:absolute;top:-34px;right:28px;width:44px;height:52px;background:#5B8DEF;border-radius:50% 50% 20% 20%;transform:rotate(18deg);z-index:5}
+.tom-nightcap:after{content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:16px;height:16px;background:#fff;border-radius:50%}
+.tom-scarf{position:absolute;left:50%;bottom:96px;transform:translateX(-50%);width:104px;height:20px;background:#E94F64;border-radius:99px;z-index:5}
 .bubble{position:absolute;left:14px;right:14px;top:14px;background:linear-gradient(180deg,#fffdf6,#fff2d8);border:1.5px solid #e8d3ac;border-radius:26px 26px 26px 10px;padding:12px 15px;font-weight:650;font-size:14.5px;line-height:1.45;color:#3a2e1e;box-shadow:0 8px 20px rgba(60,40,10,.18),inset 0 0 0 1px rgba(255,255,255,.75);z-index:4}
 .scene.night .bubble{background:linear-gradient(180deg,#fffdf6,#fff2d8)}
 .bubble:after{content:"";position:absolute;left:44px;bottom:-9px;width:16px;height:16px;background:#fff2d8;border-right:1.5px solid #e8d3ac;border-bottom:1.5px solid #e8d3ac;transform:rotate(45deg)}
@@ -163,7 +216,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <label>Pet colour</label><div class="row" style="flex-wrap:wrap" id="colourRow"></div>
 <p class="mini" style="margin-top:12px"><b>Add to your home screen:</b> on Android, open this page in Chrome → menu → Add to Home screen. On iPhone, open in Safari → Share → Add to Home Screen. It will then open like an app, with your pet front and centre.</p>
 <div class="row" style="flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="resetPet()">Reset pet & data</button><a class="btn ghost small" href="https://www.nea.gov.sg/weather" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">NEA weather ↗</a></div>
-<p class="mini" style="margin-top:10px">Weather Pet v1.3 Living pet update · Fluffy photo pet · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
+<p class="mini" style="margin-top:10px">Weather Pet v1.4 Talking Tom-style living pet · Living pet default · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
 </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -188,9 +241,9 @@ return{label:'Mixed weather',emoji:'🌤️',kind:'cloudy'};
 }
 const SPECIES={cat:{ears:'<path d="M62 38 L52 8 L82 26 Z" fill="COL"/><path d="M138 38 L148 8 L118 26 Z" fill="COL"/>',label:'Cat'},dog:{ears:'<ellipse cx="52" cy="52" rx="16" ry="28" fill="COL" transform="rotate(18 52 52)"/><ellipse cx="148" cy="52" rx="16" ry="28" fill="COL" transform="rotate(-18 148 52)"/>',label:'Dog'},bunny:{ears:'<ellipse cx="72" cy="12" rx="11" ry="34" fill="COL"/><ellipse cx="128" cy="12" rx="11" ry="34" fill="COL"/>',label:'Bunny'}};
 const COLOURS={Orange:'#FFA94D',Grey:'#9AA7B0',Cream:'#F2D8B3',Pink:'#FFB3C7',Mint:'#8FD6B5'};
-function defaultState(){return {pet:{name:'Momo',species:'cat',colour:'Orange',personality:'moody',visual:'photo',happy:80,energy:75,full:70},place:{name:'Singapore',lat:1.3521,lon:103.8198},lastWeather:null}}
+function defaultState(){return {pet:{name:'Momo',species:'cat',colour:'Orange',personality:'moody',visual:'living',happy:80,energy:75,full:70},place:{name:'Singapore',lat:1.3521,lon:103.8198},lastWeather:null}}
 let S;
-try{const raw=localStorage.getItem('weatherpet_v1');S=raw?JSON.parse(raw):defaultState()}catch(e){S=defaultState()}
+try{const raw=localStorage.getItem('weatherpet_v1');S=raw?JSON.parse(raw):defaultState();if(S.pet&&S.pet.visual==='photo'&&!S.pet._v14migrated){S.pet.visual='living';S.pet._v14migrated=true;try{localStorage.setItem('weatherpet_v1',JSON.stringify(S))}catch(e){}}}catch(e){S=defaultState()}
 function save(){try{localStorage.setItem('weatherpet_v1',JSON.stringify(S))}catch(e){}}
 let W=null,isDemo=false,lastSaved=false;
 function petSVG(){
@@ -293,14 +346,106 @@ if(kind==='rainy'||kind==='storm')return 'pet-rainy';
 if(kind==='cloudy')return 'pet-cloudy';
 return 'pet-sunny';
 }
+
+function livingAccessory(){
+if(!W)return '';
+const temp=W.current.temperature_2m;
+if(W.current.is_day===0)return '<div class="tom-nightcap"></div>';
+const kind=codeInfo(W.current.weather_code).kind;
+if(kind==='rainy'||kind==='storm')return '<div class="tom-scarf"></div>';
+if(temp>=32)return '<div class="tom-glasses"><i></i><i></i></div>';
+if(temp<=24)return '<div class="tom-scarf"></div>';
+return '';}
+function livingPetHTML(){
+const col=COLOURS[S.pet.colour]||COLOURS.Orange;
+const sp=S.pet.species||'cat';
+const earCls=sp==='dog'?'dog':(sp==='bunny'?'bunny':'cat');
+const sleepy=S.pet.energy<30?' sleepy':'';
+return `<div class="tom${sleepy}" id="tomPet" style="--fur:${col}">
+<div class="tom-tail" id="tomTail" onclick="petTouch('tail',event)" role="button" aria-label="Touch tail"></div>
+<div class="tom-body" id="tomBody" onclick="petTouch('belly',event)" role="button" aria-label="Touch belly">
+<div class="tom-belly"></div>
+<div class="tom-paw left" onclick="petTouch('paw',event)" role="button" aria-label="Touch paw"></div>
+<div class="tom-paw right" onclick="petTouch('paw',event)" role="button" aria-label="Touch paw"></div>
+</div>
+<div class="tom-head" id="tomHead" onclick="petTouch('head',event)" role="button" aria-label="Pet head">
+<div class="tom-ear left ${earCls}"><div class="tom-ear-inner"></div></div>
+<div class="tom-ear right ${earCls}"><div class="tom-ear-inner"></div></div>
+${livingAccessory()}
+<div class="tom-eye left"><i></i></div><div class="tom-eye right"><i></i></div>
+<div class="tom-blush left"></div><div class="tom-blush right"></div>
+<div class="tom-nose"></div>
+<div class="tom-mouth"><span class="mouth-smile"></span><span class="mouth-open"></span></div>
+</div>
+</div>`;}
+function stopLivingLoops(){(window._tomTimers||[]).forEach(x=>{clearTimeout(x);clearInterval(x)});window._tomTimers=[];}
+function startLivingLoops(){
+stopLivingLoops();
+const tom=()=>document.getElementById('tomPet');
+if(!tom())return;
+const blink=()=>{const el=tom();if(!el)return;el.classList.add('blinking');setTimeout(()=>el&&el.classList.remove('blinking'),150);window._tomTimers.push(setTimeout(blink,2600+Math.random()*2600));};
+window._tomTimers.push(setTimeout(blink,2200+Math.random()*2000));
+const look=()=>{const el=tom();if(!el)return;const dx=(Math.random()*8-4).toFixed(0),dy=(Math.random()*6-3).toFixed(0);el.querySelectorAll('.tom-eye').forEach(e=>e.style.transform=`translate(${dx}px,${dy}px)`);window._tomTimers.push(setTimeout(look,3600+Math.random()*3000));};
+window._tomTimers.push(setTimeout(look,1800));
+const twitch=()=>{const el=tom();if(!el)return;const ears=el.querySelectorAll('.tom-ear');if(ears.length){const ear=ears[Math.floor(Math.random()*ears.length)];ear.classList.add('twitch');setTimeout(()=>ear.classList.remove('twitch'),450);}window._tomTimers.push(setTimeout(twitch,6000+Math.random()*4000));};
+window._tomTimers.push(setTimeout(twitch,5000));}
+function speakPet(text,isReaction){
+const b=$('#petSpeech');if(!b)return;
+b.textContent=text;b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+const tom=document.getElementById('tomPet');
+if(!tom)return;
+clearInterval(window._talkInt);
+const dur=Math.min(4200,Math.max(900,text.length*38));
+const started=Date.now();
+window._talkInt=setInterval(()=>{const el=document.getElementById('tomPet');if(!el||Date.now()-started>dur){clearInterval(window._talkInt);if(el)el.classList.remove('mouth-open');return;}el.classList.toggle('mouth-open');},140);
+if(isReaction){clearTimeout(window._speechT);window._speechT=setTimeout(()=>{speakPet(petSpeech(),false);},2800);}}
+function refreshMeters(){
+$('#petNameTitle').textContent=S.pet.name;
+$('#petMood').textContent=petMood();
+$('#mHappy').textContent=S.pet.happy+'%';$('#barHappy').style.width=S.pet.happy+'%';
+$('#mEnergy').textContent=S.pet.energy+'%';$('#barEnergy').style.width=S.pet.energy+'%';
+$('#mFull').textContent=S.pet.full+'%';$('#barFull').style.width=S.pet.full+'%';}
+function petTouch(zone,ev){
+if(ev)ev.stopPropagation();
+const tom=document.getElementById('tomPet');
+if(!tom){petTap();return;}
+const per=S.pet.personality||'moody';
+let line,happy=5;
+if(zone==='head'){line=per==='moody'?"Okay. Head pats. I suppose you can continue.":"Purrr… head pats are the best.";happy=6;const h=document.getElementById('tomHead');if(h){h.classList.remove('tilt');void h.offsetWidth;h.classList.add('tilt');setTimeout(()=>h.classList.remove('tilt'),850);}}
+else if(zone==='belly'){line="Hehehe! That tickles!";happy=7;const b=document.getElementById('tomBody');if(b){b.classList.remove('bounce');void b.offsetWidth;b.classList.add('bounce');setTimeout(()=>b.classList.remove('bounce'),850);}}
+else if(zone==='tail'){line="Hey! That's my tail! …okay, wag it again.";happy=3;const tl=document.getElementById('tomTail');if(tl){tl.classList.add('fast');setTimeout(()=>tl.classList.remove('fast'),1100);}}
+else{line="High five! …or high paw.";happy=4;const paws=tom.querySelectorAll('.tom-paw');paws.forEach(pw=>{pw.classList.remove('wave');void pw.offsetWidth;pw.classList.add('wave');setTimeout(()=>pw.classList.remove('wave'),750);});}
+tom.classList.add('happy');setTimeout(()=>tom.classList.remove('happy'),1600);
+spawnHearts();
+S.pet.happy=clamp(S.pet.happy+happy);save();refreshMeters();updateCareNote();
+speakPet(S.pet.name+" says: “"+line+"”",true);}
+function livingPetTap(){
+const tom=document.getElementById('tomPet');
+if(!tom){petTap();return;}
+tom.classList.add('happy');setTimeout(()=>tom.classList.remove('happy'),1600);
+const h=document.getElementById('tomHead');if(h){h.classList.remove('tilt');void h.offsetWidth;h.classList.add('tilt');setTimeout(()=>h.classList.remove('tilt'),850);}
+spawnHearts();
+S.pet.happy=clamp(S.pet.happy+5);save();refreshMeters();updateCareNote();
+speakPet(tapLine(),true);}
 function renderPet(){
 const visual=S.pet.visual||'photo';
 const kind=W?codeInfo(W.current.weather_code).kind:'sunny';
 const night=W&&W.current.is_day===0;
 const scene=$('#scene');
-if(visual==='photo'){
+if(visual==='living'){
+$('#petEl').style.cssText='';
+$('#petEl').classList.add('living');
+$('#petEl').innerHTML=livingPetHTML();
+$('#envEl').innerHTML='';
+scene.className='scene living-scene '+(night?'night':kind);
+$('#sunEl').style.display=(kind==='sunny'&&!night)?'block':'none';
+const rain=$('#rainEl');
+if(kind==='rainy'||kind==='storm'){rain.innerHTML=Array.from({length:28},(_,i)=>`<span class="drop" style="left:${(i*37)%100}%;animation-delay:${(i%7)*0.13}s;animation-duration:${0.7+(i%5)*0.12}s"></span>`).join('')}else rain.innerHTML='';
+$('#starsEl').innerHTML=night?`<span class="star" style="left:18%;top:26%">✦</span><span class="star" style="left:78%;top:20%;animation-delay:.7s">✦</span><span class="star" style="left:55%;top:14%;animation-delay:1.2s">✧</span><span class="star" style="left:32%;top:52%;animation-delay:.4s">✧</span>`:'';}
+else if(visual==='photo'){
 scene.className='scene photo '+(night?'night':kind);
 $('#petEl').innerHTML=`<img class="pet-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="${PET_PHOTO_DATA[petPhotoFor()]}" alt="${esc(S.pet.name)} the fluffy weather pet" onerror="this.outerHTML=petSVG()">`;
+$('#petEl').classList.remove('living');
 $('#petEl').style.cssText='position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;';
 $('#sunEl').style.display='none';$('#rainEl').innerHTML='';$('#starsEl').innerHTML='';
 const env=$('#envEl');
@@ -310,6 +455,7 @@ else if(kind==='sunny'){env.innerHTML=Array.from({length:9},(_,i)=>`<span class=
 else{env.innerHTML=`<span class="envmist" style="width:180px;top:32%;animation-duration:26s"></span><span class="envmist" style="width:140px;top:58%;animation-duration:34s;animation-delay:8s"></span>`;}
 } else {
 $('#petEl').style.cssText='';
+$('#petEl').classList.remove('living');
 $('#petEl').innerHTML=petSVG();
 $('#envEl').innerHTML='';
 scene.className='scene '+(night?'night':kind);
@@ -319,7 +465,7 @@ if(kind==='rainy'||kind==='storm'){rain.innerHTML=Array.from({length:28},(_,i)=>
 $('#starsEl').innerHTML=night?`<span class="star" style="left:18%;top:26%">✦</span><span class="star" style="left:78%;top:20%;animation-delay:.7s">✦</span><span class="star" style="left:55%;top:14%;animation-delay:1.2s">✧</span><span class="star" style="left:32%;top:52%;animation-delay:.4s">✧</span>`:'';
 }
 
-$('#petSpeech').textContent=petSpeech();
+if((S.pet.visual||'living')==='living'){speakPet(petSpeech(),false);startLivingLoops();}else{$('#petSpeech').textContent=petSpeech();stopLivingLoops();}
 $('#petNameTitle').textContent=S.pet.name;
 const mood=petMood();
 $('#petMood').textContent=mood;
@@ -397,6 +543,7 @@ const s=document.createElement('span');s.className='heartbit';s.textContent=ch;
 s.style.left=(38+i*16)+'%';s.style.bottom='38%';s.style.animationDelay=(i*0.12)+'s';
 scene.appendChild(s);setTimeout(()=>s.remove(),1500);});}
 function petTap(){
+if((S.pet.visual||'living')==='living'&&document.getElementById('tomPet')){livingPetTap();return;}
 const el=$('#petEl');el.classList.remove('excited');void el.offsetWidth;el.classList.add('excited');
 setTimeout(()=>el.classList.remove('excited'),950);
 spawnHearts();
@@ -415,7 +562,7 @@ function renderSettings(){
 $('#petNameInput').value=S.pet.name;
 $('#speciesRow').innerHTML=Object.entries(SPECIES).map(([k,v])=>`<button class="chip ${S.pet.species===k?'on':''}" onclick="S.pet.species='${k}';save();renderPet();renderSettings()">${v.label}</button>`).join('');
 $('#personalityRow').innerHTML=Object.entries(PERSONALITIES).map(([k,v])=>`<button class="chip ${S.pet.personality===k?'on':''}" onclick="S.pet.personality='${k}';save();renderPet();renderSettings()" title="${v.desc}">${v.label}</button>`).join('');
-$('#visualRow').innerHTML=`<button class="chip ${(S.pet.visual||'photo')==='photo'?'on':''}" onclick="S.pet.visual='photo';save();renderPet();renderSettings()">Fluffy photo pet</button><button class="chip ${S.pet.visual==='illustration'?'on':''}" onclick="S.pet.visual='illustration';save();renderPet();renderSettings()">Classic illustration</button>`;
+$('#visualRow').innerHTML=`<button class="chip ${(S.pet.visual||'living')==='living'?'on':''}" onclick="S.pet.visual='living';save();renderPet();renderSettings()">Living pet</button><button class="chip ${S.pet.visual==='photo'?'on':''}" onclick="S.pet.visual='photo';save();renderPet();renderSettings()">Fluffy photo pet</button><button class="chip ${S.pet.visual==='illustration'?'on':''}" onclick="S.pet.visual='illustration';save();renderPet();renderSettings()">Classic illustration</button>`;
 $('#colourRow').innerHTML=Object.entries(COLOURS).map(([k,v])=>`<button class="chip ${S.pet.colour===k?'on':''}" onclick="S.pet.colour='${k}';save();renderPet();renderSettings()" style="border-left:10px solid ${v}">${k}</button>`).join('');
 }
 function savePetSettings(){const n=$('#petNameInput').value.trim();if(n)S.pet.name=n;save();renderPet();toast('Pet saved ✓')}
