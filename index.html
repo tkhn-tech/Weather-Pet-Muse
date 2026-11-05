@@ -113,7 +113,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 .tom-nightcap{position:absolute;top:-34px;right:28px;width:44px;height:52px;background:#5B8DEF;border-radius:50% 50% 20% 20%;transform:rotate(18deg);z-index:5}
 .tom-nightcap:after{content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:16px;height:16px;background:#fff;border-radius:50%}
 .tom-scarf{position:absolute;left:50%;bottom:96px;transform:translateX(-50%);width:104px;height:20px;background:#E94F64;border-radius:99px;z-index:5}
-.bubble{position:absolute;left:14px;right:14px;top:14px;background:linear-gradient(180deg,#fffdf6,#fff2d8);border:1.5px solid #e8d3ac;border-radius:26px 26px 26px 10px;padding:12px 15px;font-weight:650;font-size:14.5px;line-height:1.45;color:#3a2e1e;box-shadow:0 8px 20px rgba(60,40,10,.18),inset 0 0 0 1px rgba(255,255,255,.75);z-index:4}
+.bubble{position:relative;background:linear-gradient(180deg,#fffdf6,#fff2d8);border:1.5px solid #e8d3ac;border-radius:26px 26px 26px 10px;padding:12px 15px;font-weight:650;font-size:14.5px;line-height:1.45;color:#3a2e1e;box-shadow:0 8px 20px rgba(60,40,10,.18),inset 0 0 0 1px rgba(255,255,255,.75);z-index:4;margin:14px 2px 20px}
 .scene.night .bubble{background:linear-gradient(180deg,#fffdf6,#fff2d8)}
 .bubble:after{content:"";position:absolute;left:44px;bottom:-9px;width:16px;height:16px;background:#fff2d8;border-right:1.5px solid #e8d3ac;border-bottom:1.5px solid #e8d3ac;transform:rotate(45deg)}
 .bubble:before{content:"";position:absolute;left:62px;bottom:-20px;width:10px;height:10px;background:#fff2d8;border:1.5px solid #e8d3ac;border-radius:50%}
@@ -166,13 +166,13 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 </div>
 <div id="cityResults" style="display:flex;gap:8px;flex-wrap:wrap"></div>
 
+<div class="bubble" id="petSpeech">Loading the sky for your pet…</div>
 <div class="scene sunny" id="scene" onclick="petTap()" role="button" tabindex="0" aria-label="Pet your weather pet" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();petTap()}">
 <div class="sun" id="sunEl"></div>
 <div class="cloud c1"></div><div class="cloud c2"></div>
 <div class="rain" id="rainEl"></div>
 <div id="starsEl"></div>
 <div class="env" id="envEl"></div>
-<div class="bubble" id="petSpeech">Loading the sky for your pet…</div>
 <div class="pet" id="petEl"></div>
 <div class="ground"></div>
 </div>
@@ -220,7 +220,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <label>Pet colour</label><div class="row" style="flex-wrap:wrap" id="colourRow"></div>
 <p class="mini" style="margin-top:12px"><b>Add to your home screen:</b> on Android, open this page in Chrome → menu → Add to Home screen. On iPhone, open in Safari → Share → Add to Home Screen. It will then open like an app, with your pet front and centre.</p>
 <div class="row" style="flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="resetPet()">Reset pet & data</button><a class="btn ghost small" href="https://www.nea.gov.sg/weather" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">NEA weather ↗</a></div>
-<p class="mini" style="margin-top:10px">Weather Pet v1.5.4 Animated photo pet · Full pet in frame · Fluffy photo, now moving · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
+<p class="mini" style="margin-top:10px">Weather Pet v1.5.5 Animated photo pet · Bubble above the video · Fluffy photo, now moving · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
 </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
