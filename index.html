@@ -53,7 +53,8 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
 .pet.jumping{animation:jump .55s ease}
 @keyframes jump{0%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-42px)}100%{transform:translateX(-50%) translateY(0)}}
-.pet-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pet-photo,.pet-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.scene.video .pet{animation:none}
 .scene.photo .sun,.scene.photo .cloud,.scene.photo .ground,.scene.photo .rain{display:none}
 .scene.photo .pet{left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;animation:none}
 
@@ -217,7 +218,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <label>Pet colour</label><div class="row" style="flex-wrap:wrap" id="colourRow"></div>
 <p class="mini" style="margin-top:12px"><b>Add to your home screen:</b> on Android, open this page in Chrome → menu → Add to Home screen. On iPhone, open in Safari → Share → Add to Home Screen. It will then open like an app, with your pet front and centre.</p>
 <div class="row" style="flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="resetPet()">Reset pet & data</button><a class="btn ghost small" href="https://www.nea.gov.sg/weather" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">NEA weather ↗</a></div>
-<p class="mini" style="margin-top:10px">Weather Pet v1.4.1 Talking Tom-style living pet · Living pet default · Paw fix · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
+<p class="mini" style="margin-top:10px">Weather Pet v1.5 Animated photo pet · Fluffy photo, now moving · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
 </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -242,9 +243,9 @@ return{label:'Mixed weather',emoji:'🌤️',kind:'cloudy'};
 }
 const SPECIES={cat:{ears:'<path d="M62 38 L52 8 L82 26 Z" fill="COL"/><path d="M138 38 L148 8 L118 26 Z" fill="COL"/>',label:'Cat'},dog:{ears:'<ellipse cx="52" cy="52" rx="16" ry="28" fill="COL" transform="rotate(18 52 52)"/><ellipse cx="148" cy="52" rx="16" ry="28" fill="COL" transform="rotate(-18 148 52)"/>',label:'Dog'},bunny:{ears:'<ellipse cx="72" cy="12" rx="11" ry="34" fill="COL"/><ellipse cx="128" cy="12" rx="11" ry="34" fill="COL"/>',label:'Bunny'}};
 const COLOURS={Orange:'#FFA94D',Grey:'#9AA7B0',Cream:'#F2D8B3',Pink:'#FFB3C7',Mint:'#8FD6B5'};
-function defaultState(){return {pet:{name:'Momo',species:'cat',colour:'Orange',personality:'moody',visual:'living',happy:80,energy:75,full:70},place:{name:'Singapore',lat:1.3521,lon:103.8198},lastWeather:null}}
+function defaultState(){return {pet:{name:'Momo',species:'cat',colour:'Orange',personality:'moody',visual:'video',happy:80,energy:75,full:70},place:{name:'Singapore',lat:1.3521,lon:103.8198},lastWeather:null}}
 let S;
-try{const raw=localStorage.getItem('weatherpet_v1');S=raw?JSON.parse(raw):defaultState();if(S.pet&&S.pet.visual==='photo'&&!S.pet._v14migrated){S.pet.visual='living';S.pet._v14migrated=true;try{localStorage.setItem('weatherpet_v1',JSON.stringify(S))}catch(e){}}}catch(e){S=defaultState()}
+try{const raw=localStorage.getItem('weatherpet_v1');S=raw?JSON.parse(raw):defaultState();if(S.pet&&(S.pet.visual==='photo'||S.pet.visual==='living')&&!S.pet._v15migrated){S.pet.visual='video';S.pet._v15migrated=true;try{localStorage.setItem('weatherpet_v1',JSON.stringify(S))}catch(e){}}}catch(e){S=defaultState()}
 function save(){try{localStorage.setItem('weatherpet_v1',JSON.stringify(S))}catch(e){}}
 let W=null,isDemo=false,lastSaved=false;
 function petSVG(){
@@ -428,6 +429,7 @@ const h=document.getElementById('tomHead');if(h){h.classList.remove('tilt');void
 spawnHearts();
 S.pet.happy=clamp(S.pet.happy+5);save();refreshMeters();updateCareNote();
 speakPet(tapLine(),true);}
+function petVideoFor(){return petPhotoFor();}
 function renderPet(){
 const visual=S.pet.visual||'photo';
 const kind=W?codeInfo(W.current.weather_code).kind:'sunny';
@@ -443,6 +445,12 @@ $('#sunEl').style.display=(kind==='sunny'&&!night)?'block':'none';
 const rain=$('#rainEl');
 if(kind==='rainy'||kind==='storm'){rain.innerHTML=Array.from({length:28},(_,i)=>`<span class="drop" style="left:${(i*37)%100}%;animation-delay:${(i%7)*0.13}s;animation-duration:${0.7+(i%5)*0.12}s"></span>`).join('')}else rain.innerHTML='';
 $('#starsEl').innerHTML=night?`<span class="star" style="left:18%;top:26%">✦</span><span class="star" style="left:78%;top:20%;animation-delay:.7s">✦</span><span class="star" style="left:55%;top:14%;animation-delay:1.2s">✧</span><span class="star" style="left:32%;top:52%;animation-delay:.4s">✧</span>`:'';}
+else if(visual==='video'){
+scene.className='scene photo video '+(night?'night':kind);
+$('#petEl').classList.remove('living');
+$('#petEl').innerHTML=`<video class="pet-video" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="videos/${petVideoFor()}.mp4" poster="images/${petPhotoFor()}.jpg" autoplay muted loop playsinline></video>`;
+$('#petEl').style.cssText='position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;';
+$('#sunEl').style.display='none';$('#rainEl').innerHTML='';$('#starsEl').innerHTML='';$('#envEl').innerHTML='';}
 else if(visual==='photo'){
 scene.className='scene photo '+(night?'night':kind);
 $('#petEl').innerHTML=`<img class="pet-photo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="${PET_PHOTO_DATA[petPhotoFor()]}" alt="${esc(S.pet.name)} the fluffy weather pet" onerror="this.outerHTML=petSVG()">`;
@@ -563,7 +571,7 @@ function renderSettings(){
 $('#petNameInput').value=S.pet.name;
 $('#speciesRow').innerHTML=Object.entries(SPECIES).map(([k,v])=>`<button class="chip ${S.pet.species===k?'on':''}" onclick="S.pet.species='${k}';save();renderPet();renderSettings()">${v.label}</button>`).join('');
 $('#personalityRow').innerHTML=Object.entries(PERSONALITIES).map(([k,v])=>`<button class="chip ${S.pet.personality===k?'on':''}" onclick="S.pet.personality='${k}';save();renderPet();renderSettings()" title="${v.desc}">${v.label}</button>`).join('');
-$('#visualRow').innerHTML=`<button class="chip ${(S.pet.visual||'living')==='living'?'on':''}" onclick="S.pet.visual='living';save();renderPet();renderSettings()">Living pet</button><button class="chip ${S.pet.visual==='photo'?'on':''}" onclick="S.pet.visual='photo';save();renderPet();renderSettings()">Fluffy photo pet</button><button class="chip ${S.pet.visual==='illustration'?'on':''}" onclick="S.pet.visual='illustration';save();renderPet();renderSettings()">Classic illustration</button>`;
+$('#visualRow').innerHTML=`<button class="chip ${(S.pet.visual||'video')==='video'?'on':''}" onclick="S.pet.visual='video';save();renderPet();renderSettings()">Animated photo pet</button><button class="chip ${S.pet.visual==='living'?'on':''}" onclick="S.pet.visual='living';save();renderPet();renderSettings()">Living pet</button><button class="chip ${S.pet.visual==='photo'?'on':''}" onclick="S.pet.visual='photo';save();renderPet();renderSettings()">Fluffy photo pet</button><button class="chip ${S.pet.visual==='illustration'?'on':''}" onclick="S.pet.visual='illustration';save();renderPet();renderSettings()">Classic illustration</button>`;
 $('#colourRow').innerHTML=Object.entries(COLOURS).map(([k,v])=>`<button class="chip ${S.pet.colour===k?'on':''}" onclick="S.pet.colour='${k}';save();renderPet();renderSettings()" style="border-left:10px solid ${v}">${k}</button>`).join('');
 }
 function savePetSettings(){const n=$('#petNameInput').value.trim();if(n)S.pet.name=n;save();renderPet();toast('Pet saved ✓')}
