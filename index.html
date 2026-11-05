@@ -53,8 +53,11 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
 .pet.jumping{animation:jump .55s ease}
 @keyframes jump{0%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-42px)}100%{transform:translateX(-50%) translateY(0)}}
-.pet-photo,.pet-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pet-photo,.pet-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom}
 .scene.video .pet{animation:none}
+.pet-react-layer{clip-path:ellipse(38% 44% at 50% 56%);pointer-events:none;transform-origin:50% 75%}
+.pet-react-layer.react{animation:petReact .9s ease}
+@keyframes petReact{0%{transform:translateY(0) rotate(0deg) scale(1)}25%{transform:translateY(-10px) rotate(-2deg) scale(1.02)}50%{transform:translateY(2px) rotate(1.5deg) scale(.99)}75%{transform:translateY(-5px) rotate(-1deg) scale(1.01)}100%{transform:translateY(0) rotate(0deg) scale(1)}}
 .scene.photo .sun,.scene.photo .cloud,.scene.photo .ground,.scene.photo .rain{display:none}
 .scene.photo .pet{left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;animation:none}
 
@@ -218,7 +221,7 @@ label{font-size:13px;font-weight:700;display:block;margin:10px 0 5px}label:first
 <label>Pet colour</label><div class="row" style="flex-wrap:wrap" id="colourRow"></div>
 <p class="mini" style="margin-top:12px"><b>Add to your home screen:</b> on Android, open this page in Chrome → menu → Add to Home screen. On iPhone, open in Safari → Share → Add to Home Screen. It will then open like an app, with your pet front and centre.</p>
 <div class="row" style="flex-wrap:wrap;margin-top:10px"><button class="btn ghost small" onclick="resetPet()">Reset pet & data</button><a class="btn ghost small" href="https://www.nea.gov.sg/weather" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">NEA weather ↗</a></div>
-<p class="mini" style="margin-top:10px">Weather Pet v1.5.1 Animated photo pet · Fluffy photo, now moving · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
+<p class="mini" style="margin-top:10px">Weather Pet v1.5.2 Animated photo pet · Centred and grounded, pet-only tap · Fluffy photo, now moving · Personality update · Weather from Open-Meteo (free, no API key). If you are offline, it shows a clearly labelled demo forecast for Singapore instead of pretending it is live. UV is the daily maximum.</p>
 </div>
 </div>
 <div class="toast" id="toast" role="status"></div>
@@ -422,6 +425,13 @@ tom.classList.add('happy');setTimeout(()=>tom.classList.remove('happy'),1600);
 spawnHearts();
 S.pet.happy=clamp(S.pet.happy+happy);save();refreshMeters();updateCareNote();
 speakPet(S.pet.name+" says: “"+line+"”",true);}
+function videoPetTap(){
+const base=document.getElementById('petVideo'),react=document.getElementById('petReactVideo');
+if(react&&base){try{react.currentTime=base.currentTime;}catch(e){}react.classList.remove('react');void react.offsetWidth;react.classList.add('react');setTimeout(()=>react.classList.remove('react'),950);}
+spawnHearts();
+S.pet.happy=clamp(S.pet.happy+5);save();refreshMeters();updateCareNote();
+const b=$('#petSpeech');b.textContent=tapLine();b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop');
+clearTimeout(window._speechT);window._speechT=setTimeout(()=>{b.textContent=petSpeech();},2600);}
 function livingPetTap(){
 const tom=document.getElementById('tomPet');
 if(!tom){petTap();return;}
@@ -449,7 +459,7 @@ $('#starsEl').innerHTML=night?`<span class="star" style="left:18%;top:26%">✦</
 else if(visual==='video'){
 scene.className='scene photo video '+(night?'night':kind);
 $('#petEl').classList.remove('living');
-$('#petEl').innerHTML=`<video class="pet-video" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block" src="${petVideoUrl()}" poster="${PET_PHOTO_DATA[petPhotoFor()]}" autoplay muted loop playsinline></video>`;
+$('#petEl').innerHTML=`<video id="petVideo" class="pet-video" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;display:block" src="${petVideoUrl()}" poster="${PET_PHOTO_DATA[petPhotoFor()]}" autoplay muted loop playsinline></video><video id="petReactVideo" class="pet-video pet-react-layer" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center bottom;display:block" src="${petVideoUrl()}" poster="${PET_PHOTO_DATA[petPhotoFor()]}" autoplay muted loop playsinline aria-hidden="true"></video>`;
 $('#petEl').style.cssText='position:absolute;left:0;right:0;top:0;bottom:0;width:100%;height:100%;transform:none;';
 $('#sunEl').style.display='none';$('#rainEl').innerHTML='';$('#starsEl').innerHTML='';$('#envEl').innerHTML='';}
 else if(visual==='photo'){
@@ -553,6 +563,7 @@ const s=document.createElement('span');s.className='heartbit';s.textContent=ch;
 s.style.left=(38+i*16)+'%';s.style.bottom='38%';s.style.animationDelay=(i*0.12)+'s';
 scene.appendChild(s);setTimeout(()=>s.remove(),1500);});}
 function petTap(){
+if((S.pet.visual||'video')==='video'&&document.getElementById('petVideo')){videoPetTap();return;}
 if((S.pet.visual||'living')==='living'&&document.getElementById('tomPet')){livingPetTap();return;}
 const el=$('#petEl');el.classList.remove('excited');void el.offsetWidth;el.classList.add('excited');
 setTimeout(()=>el.classList.remove('excited'),950);
